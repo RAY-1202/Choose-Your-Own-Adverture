@@ -6,6 +6,7 @@
 """
 
 import json
+import os
 from sqlalchemy.orm import Session
 
 from langchain_openai import ChatOpenAI
@@ -30,6 +31,10 @@ class StoryGenerator:
 
     @classmethod
     def _get_llm(cls):  # 方法名前加下划线表示私有方法
+        serviceurl = os.getenv("CHOREO_DOUBAO_CONNECTION_SERVICEURL")
+        consumerkey = os.getenv("CHOREO_DOUBAO_CONNECTION_CONSUMERKEY")
+        if consumerkey and serviceurl:
+            return ChatOpenAI(model="doubao-seed-2-0-mini-260215", api_key=consumerkey, base_url=serviceurl)
         """
         获取 LLM 实例
 
@@ -37,7 +42,7 @@ class StoryGenerator:
             ChatOpenAI: 配置好的模型实例
         """
         return ChatOpenAI(
-            model="moonshot-v1-8k",
+            model="doubao-seed-2-0-mini-260215",
             api_key=settings.OPENAI_API_KEY,
             base_url=settings.OPENAI_API_BASE
         )
