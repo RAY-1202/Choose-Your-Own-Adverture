@@ -31,20 +31,28 @@ class StoryGenerator:
 
     @classmethod
     def _get_llm(cls):  # 方法名前加下划线表示私有方法
-        serviceurl = os.getenv("CHOREO_DOUBAO_CONNECTION_SERVICEURL")
-        consumerkey = os.getenv("CHOREO_DOUBAO_CONNECTION_CONSUMERKEY")
-        if consumerkey and serviceurl:
-            return ChatOpenAI(model="doubao-seed-2-0-mini-260215", api_key=consumerkey, base_url=serviceurl)
         """
         获取 LLM 实例
+
+        优先使用 Choreo 连接环境变量，如果不存在则使用本地 .env 配置。
 
         Returns:
             ChatOpenAI: 配置好的模型实例
         """
+        serviceurl = os.getenv("CHOREO_DOUBAO_CONNECTION_SERVICEURL")
+        consumerkey = os.getenv("CHOREO_DOUBAO_CONNECTION_CONSUMERKEY")
+        if consumerkey and serviceurl:
+            return ChatOpenAI(
+                model="doubao-seed-2-0-mini-260215",
+                api_key=consumerkey,
+                base_url=serviceurl,
+                timeout=120,  # 设置 120 秒超时，防止 LLM 调用无限挂起
+            )
         return ChatOpenAI(
             model="doubao-seed-2-0-mini-260215",
             api_key=settings.OPENAI_API_KEY,
-            base_url=settings.OPENAI_API_BASE
+            base_url=settings.OPENAI_API_BASE,
+            timeout=120,  # 设置 120 秒超时，防止 LLM 调用无限挂起
         )
 
     @classmethod

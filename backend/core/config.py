@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     OPENAI_API_KEY: str
 
-    OPENAI_API_BASE: str = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"  # Moonshot API base URL
+    OPENAI_API_BASE: str = "https://ark.cn-beijing.volces.com/api/v3"  # 豆包 API base URL（不要包含 /chat/completions，LangChain 会自动追加）
 
     # 字段验证，将逗号分隔的字符串转换为列表
     @field_validator("ALLOWED_ORIGINS")
